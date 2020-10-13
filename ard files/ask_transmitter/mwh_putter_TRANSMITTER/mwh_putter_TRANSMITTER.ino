@@ -10,7 +10,8 @@
 const int SW_pin = 2; //digital pin connected to switch output
 const int X_pin = 1; //analog pin connected to x output
 const int Y_pin = 0; //analog pin connected to y output
-const int BTN_pin = 5; //digital pin for button
+const int BTN_pin = 9; //digital pin for button
+String status_;
 
 #ifdef RH_HAVE_HARDWARE_SPI
 #include <SPI.h> // Not actually used but needed to compile
@@ -33,8 +34,8 @@ void setup()
     ;
 #endif
 
-pinMode(BTN_pin, INPUT);
-digitalWrite(BTN_pin, LOW);
+pinMode(BTN_pin, INPUT_PULLUP);
+//digitalWrite(BTN_pin, LOW);
 }
 
 void loop()
@@ -42,17 +43,27 @@ void loop()
   String js_Y = (String)(analogRead(Y_pin) - 500);
   String js_X = (String)(analogRead(X_pin) - 508);
 
-  Serial.println(analogRead(BTN_pin));
+//  Serial.println(analogRead(BTN_pin));
+
+//  if(analogRead(BTN_pin) >= 675 && analogRead(BTN_pin) <= 695) {
+  if(digitalRead(BTN_pin)==LOW) {
+//    Serial.println("On");
+    status_ = "1";
+  } else {
+//    Serial.println("Off");
+    status_ = "0";
+  }
 
 //  if (digitalRead(BTN_pin) == HIGH) {
-//    // turn LED on:
+//    // turn LED on:ser
 //    Serial.println("on");
 //  } else {
 //    // turn LED off:
 //    Serial.println("off");
 //  }
 
-  String s = js_X + ":" + js_Y;
+  String s = js_X + ":" + js_Y + ":" + status_;
+  Serial.println(s);
 
   const char *msg = s.c_str();;
 
